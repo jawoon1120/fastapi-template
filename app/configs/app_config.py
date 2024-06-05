@@ -7,6 +7,7 @@ class Settings(BaseSettings):
 
     POSTGRESQL_HOST: str
     POSTGRESQL_USER: str
+    POSTGRESQL_PORT: str
     POSTGRESQL_PASSWORD: str
     POSTGRESQL_DATABASE: str
     
@@ -17,11 +18,4 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_postgres_connection() -> str:
     settings = Settings()
-    return f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{str(settings.DB_PORT)}/{settings.DB_NAME}"
-
-
-@lru_cache()
-def get_postgres_migrate_connection() -> str:
-    settings = Settings()
-    return f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{str(settings.DB_PORT)}/{settings.DB_NAME}"
-
+    return f"postgresql+asyncpg://{settings.POSTGRESQL_USER}:{settings.POSTGRESQL_PASSWORD}@{settings.POSTGRESQL_HOST}:{str(settings.POSTGRESQL_PORT)}/{settings.POSTGRESQL_DATABASE}"
