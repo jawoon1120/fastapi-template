@@ -11,9 +11,9 @@ router = APIRouter(tags=["book"])
     response_model=list[EnquiryDetail], 
     status_code=status.HTTP_200_OK
 )
-def get_books(
+async def get_books(
     book_service : Annotated[BookService, Depends(BookService)]
 ):
-    res = book_service.get_books()
+    res = await book_service.get_books()
 
     return res

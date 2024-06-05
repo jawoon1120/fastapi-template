@@ -1,23 +1,15 @@
+from typing import Annotated
+from fastapi import Depends
+
+from app.domains.books.infra.book_entity import BookEntity
+from ..infra.book_repostiory import BookRepository
+
+
 class BookService:
-    def __init__(self):
-        pass
+    def __init__(self, book_repository = Depends(BookRepository)):
+        self.book_repoistory = book_repository
     
-    def get_books(self) -> list[dict]:
-        book_list: list[dict] = [
-            {
-                "name": "The book1",
-                "author": "sam",
-                "description": "it's good book1"
-            },
-            {
-                "name": "The book2",
-                "author": "kim",
-                "description": "it's good book2"
-            },
-            {
-                "name": "The book3",
-                "author": "jeong",
-                "description": "it's good book3"
-            }
-        ]
-        return book_list
+    async def get_books(self) -> list[BookEntity]:
+        
+        books = await self.book_repoistory.get_books()
+        return books
