@@ -1,0 +1,11 @@
+default_stages: [push]
+repos:
+  - repo: local
+    hooks:
+      - id: run-pytest
+        name: Run pytest
+        exclude: ^migrations/
+        entry:  bash -c 'pytest app'
+        language: system
+        pass_filenames: false
+        always_run: true

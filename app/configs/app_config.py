@@ -19,3 +19,8 @@ class Settings(BaseSettings):
 def get_postgres_connection() -> str:
     settings = Settings()
     return f"postgresql+asyncpg://{settings.POSTGRESQL_USER}:{settings.POSTGRESQL_PASSWORD}@{settings.POSTGRESQL_HOST}:{str(settings.POSTGRESQL_PORT)}/{settings.POSTGRESQL_DATABASE}"
+
+@lru_cache()
+def get_postgres_test_connection() -> str:
+    settings = Settings()
+    return f"postgresql+asyncpg://{settings.POSTGRESQL_USER}:{settings.POSTGRESQL_PASSWORD}@{settings.POSTGRESQL_HOST}:{str(settings.POSTGRESQL_PORT)}/{settings.POSTGRESQL_DATABASE}_test"
