@@ -17,3 +17,16 @@ async def get_books(
     res = await book_service.get_books()
 
     return res
+
+@router.post(
+    "/books", 
+    status_code=status.HTTP_200_OK
+)
+async def create_books_with_transaction(
+    book_service : Annotated[BookService, Depends(BookService)]
+):
+    res = await book_service.create_book_one_two()
+
+    return res
+
+

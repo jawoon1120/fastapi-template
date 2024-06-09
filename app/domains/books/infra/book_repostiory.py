@@ -16,3 +16,20 @@ class BookRepository(Repository):
         query = select(BookEntity)
         result = await self.session.execute(query)
         return result.scalars().all()
+    
+    def create_book_one(self):
+        book = BookEntity()
+        book.name = "book_one"
+        book.author = "jawoon_one"
+        book.description = "good_one"
+        self.session.add(book)
+        
+
+    def create_book_two(self):
+        book = BookEntity()
+        book.name = "book_two"
+        book.author = "jawoon_two"
+        book.description = "good_two"
+        raise Exception({"detail":"error"})
+        self.session.add(book)
+        

@@ -1,10 +1,13 @@
 import pytest
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from collections.abc import AsyncGenerator
-
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import (
+    async_sessionmaker,
+    create_async_engine, 
+    AsyncSession,
+    async_scoped_session
+)
 from httpx import AsyncClient
-
+import asyncio
 from app.common.infra.base import Base
 from app.core.database.async_session import get_db_session
 from app.main import app
@@ -12,19 +15,25 @@ from app.configs.app_config import get_postgres_test_connection
 
 TEST_DATABASE_URL = get_postgres_test_connection()
 
+
 test_engine = create_async_engine(TEST_DATABASE_URL)
-TestingSessionLocal = async_sessionmaker(bind=test_engine, expire_on_commit=False)
+test_session_factory = async_sessionmaker(bind=test_engine, autocommit=False, autoflush=True, expire_on_commit=False)
 
-
-# Override the get_db dependency
 async def override_get_db_session() -> AsyncGenerator[AsyncSession, None]:
-    async with TestingSessionLocal() as session:
+
+    Session = async_scoped_session(test_session_factory, scopefunc=asyncio.current_task)
+
+    async with Session() as session:
         try:
             yield session
             await session.commit()
         except:
             await session.rollback()
             raise
+        finally:
+            await Session.remove()
+            await test_engine.dispose()
+
 
 app.dependency_overrides[get_db_session] = override_get_db_session
 
