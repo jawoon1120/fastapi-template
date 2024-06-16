@@ -17,3 +17,13 @@ class UserRepository(Repository):
         result = await self.session.execute(query)
         return result.scalars().one_or_none()
 
+    async def create_user (self, email:str, password:str):
+        user = UserEntity(
+            email = email,
+            password = password
+        )
+
+        self.session.add(user)
+        await self.session.refresh(user)
+
+        return user

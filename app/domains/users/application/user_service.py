@@ -22,3 +22,9 @@ class UserService:
 
         return user
 
+    async def create_user(self, email:str, password:str):
+
+        hashed_password = self.auth_servcie._get_password_hash(password)
+        user = await self.user_repository.create_user(email=email, password=hashed_password)
+        
+        await user
