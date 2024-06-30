@@ -10,7 +10,7 @@ class Base(DeclarativeBase,AsyncAttrs):
 class BaseEntity(Base):
     __abstract__ = True
 
-    id: Mapped[int] = mapped_column(Identity(start=1, increment=1), primary_key=True)
+    id: Mapped[int] = mapped_column(Identity(start=1, increment=1), primary_key=True, sort_order=-1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True, onupdate=func.now())
     deleted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
